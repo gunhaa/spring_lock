@@ -15,8 +15,6 @@ class AccountController(
     @PostMapping
     fun createAccount(@RequestParam id: String, @RequestParam owner: String): ResponseEntity<Account> {
         // TODO: 요청 파라미터 검증 추가
-        val validator = Validator();
-
         val account = accountService.createAccount(id, owner);
         return ResponseEntity.ok(account)
     }
