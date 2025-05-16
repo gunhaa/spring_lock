@@ -21,7 +21,7 @@ public class AccountServiceJavaTest {
 
     @Test
     @DisplayName("이메일 전송 호출")
-    void registerUser_이메일전송이_호출되어야한다() {
+    void registerUser_이메일_전송이_호출되어야한다() {
         // given
         EmailService mockEmailService = Mockito.mock(EmailService.class);
 //        PessimisticLockManager pessimisticLockManager = new PessimisticLockManager();
