@@ -1,23 +1,25 @@
 package com.example.banking.service
 
+import com.example.banking.cache.IAccountCache
 import com.example.banking.customExceptionHandler.AccountNotFoundException
 import com.example.banking.domain.Account
-import com.example.banking.lock.PessimisticLockManager
 import com.example.banking.validator.Validator
 import org.springframework.stereotype.Service
 import java.util.concurrent.ConcurrentHashMap
 
+
 @Service
 class AccountService(
     private val emailService: EmailService,
-    private val validator: Validator,
-    private val accountLockService: AccountLockService
+    private val accountLockService: AccountLockService,
+    private val iAccountCache: IAccountCache
 ) {
     private val accounts = ConcurrentHashMap<String, Account>()
 
+
     fun createAccount(id: String, owner: String): Account {
         // TODO: 중복 계좌 생성 방지 로직 추가 가능
-        validator.validateCreateAccount(id, owner)
+        Validator.validateCreateAccount(id, owner)
         val account = Account(id = id, owner = owner, balance = 0)
         accounts[id] = account
         emailService.sendWelcomeEmail(owner)
@@ -28,7 +30,7 @@ class AccountService(
         // TODO: 유효한 입금 금액인지 검증 추가 가능
         val account = accounts[id] ?: throw IllegalArgumentException("Account not found")
 
-        accountLockService.withAccountLock(id){
+        accountLockService.withAccountLock(id) {
             account.balance += amount
         }
 
@@ -50,7 +52,20 @@ class AccountService(
     }
 
     fun getAccount(id: String): Account {
-        // TODO: 인증된 사용자만 조회 가능하도록 보안 로직 추가 가능
-        return accounts[id] ?: throw AccountNotFoundException(id)
+
+        val cached = iAccountCache.getCache(id)
+        if (cached != null) {
+            return cached
+        }
+
+        // 원본 조회
+        val account = accounts[id] ?: throw AccountNotFoundException(id)
+        iAccountCache.putCache(id, account)
+
+        return account
+    }
+
+    fun accountsClear(): Unit {
+        accounts.clear()
     }
 }

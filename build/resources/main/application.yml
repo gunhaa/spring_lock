@@ -1,0 +1,5 @@
+Server:
+  port: 7777
+account:
+  cache:
+    ttl: 5000 # 밀리초 단위 (5초=5000)

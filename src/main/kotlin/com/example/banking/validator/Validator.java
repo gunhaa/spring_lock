@@ -2,20 +2,7 @@ package com.example.banking.validator;
 
 public class Validator {
 
-    private static volatile Validator INSTANCE;
-
-    public Validator() {
-    }
-
-    public static Validator getInstance() {
-        if (INSTANCE == null) {
-            synchronized (Validator.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new Validator();
-                }
-            }
-        }
-        return INSTANCE;
+    private Validator() {
     }
 
     /**
@@ -23,7 +10,7 @@ public class Validator {
      * @param id
      * @param owner
      */
-    public boolean validateCreateAccount(String id, String owner) {
+    public static boolean validateCreateAccount(String id, String owner) {
         if (!id.matches("\\d+")) {
             throw new IllegalArgumentException("id는 숫자로만 구성되어야 합니다.");
         }

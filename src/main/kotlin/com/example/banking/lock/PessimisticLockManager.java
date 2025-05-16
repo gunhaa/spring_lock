@@ -13,7 +13,8 @@ public class PessimisticLockManager {
 
     /**
      * 특정 key(accountId 등)에 대해 동기화된 코드 블록을 실행합니다.
-     *
+     * 이 메서드는 JVM 내 단일 인스턴스 환경에서만 스레드 안전성을 보장하며,
+     * 분산 환경에서는 동작하지 않습니다.
      * @param accountId   리소스를 구분하기 위한 고유 키 (예: 계좌 ID)
      * @param task  동기화되어 실행될 비즈니스 로직
      */

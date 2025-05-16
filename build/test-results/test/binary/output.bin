@@ -1,0 +1,6 @@
+this ttl: 1000
+Cache MISS (InMemory): user1
+this ttl: 1000
+Cache MISS (InMemory): user1
+this ttl: 1000
+Cache HIT (InMemory): user1
